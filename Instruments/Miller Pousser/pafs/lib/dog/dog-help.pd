@@ -1,0 +1,14 @@
+#N canvas 147 37 600 500 12;
+#X obj 84 158 print;
+#X msg 84 98 list foo 3;
+#X text 187 99 send init values for fields;
+#X obj 42 25 dog;
+#X text 80 23 - simple dialog windows;
+#X text 346 129 dialog and field names;
+#X obj 84 130 dog dialog-name field another-field;
+#X text 77 211 todo: set the field width \; other control types;
+#X obj 51 100 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 1 0 6 0;
+#X connect 6 0 0 0;
+#X connect 8 0 6 0;

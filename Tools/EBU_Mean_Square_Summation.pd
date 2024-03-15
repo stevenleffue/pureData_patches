@@ -1,0 +1,8 @@
+#N canvas 271 324 1111 496 12;
+#X obj 261 166 fexpr~ (1/N) * S * ($x1^2);
+#X text 455 165 (1/N) * E[i=1 to N](x[i])^2);
+#X text 442 243 Where N = total number of samples in interval T E[i=1
+to N] represents the summation of samples within T x[i] = input Square
+each sample sum the squared values and then divide the sum by the total
+number of samples in the interval N= T * Fs Number of Samples = Time
+* Sample Rate;

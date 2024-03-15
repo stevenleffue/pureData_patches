@@ -1,0 +1,34 @@
+#N canvas 128 56 655 397 10;
+#X obj 329 98 loadbang;
+#X obj 358 165 symbol \$1;
+#X obj 266 365 table \$1 515;
+#X obj 358 214 soundfiler;
+#X msg 150 194 512 0 \, 513 1 \, 514 2;
+#X obj 150 219 unpack;
+#X obj 150 282 pack;
+#X obj 150 259 swap;
+#X obj 187 242 tabread \$1;
+#X obj 150 304 tabwrite \$1;
+#X text 443 143 load the soundfile in the;
+#X text 445 163 table of the same name;
+#X text 149 326 ...then copy points 0 \, 1 \, 2 to 512 \, 513 \, 514
+;
+#X text 123 23 replacement for ISPW "tab1~" object -- renamed \, because
+you can't have multiples in Pd (so hand culling is needed.) A 512-point
+soundfile fills a 515-point Pd table (with three wraparound points
+\, suitable for tabread4~.);
+#X obj 307 224 print;
+#X obj 328 140 t b b;
+#X msg 358 191 read \$1 \$1;
+#X connect 0 0 15 0;
+#X connect 1 0 16 0;
+#X connect 4 0 5 0;
+#X connect 5 0 7 0;
+#X connect 5 1 8 0;
+#X connect 6 0 9 0;
+#X connect 7 0 6 0;
+#X connect 7 1 6 1;
+#X connect 8 0 7 1;
+#X connect 15 0 4 0;
+#X connect 15 1 1 0;
+#X connect 16 0 3 0;

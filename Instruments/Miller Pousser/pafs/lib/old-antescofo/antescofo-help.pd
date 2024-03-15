@@ -1,0 +1,981 @@
+#N canvas 9 22 722 593 10;
+#X msg 131 207 start;
+#X msg 132 229 stop;
+#X msg 185 282 printscore;
+#X msg 185 261 score ReichScore2.txt;
+#N canvas 364 458 191 247 Observation 0;
+#X obj 13 18 inlet~;
+#X obj 13 91 outlet~;
+#X connect 0 0 1 0;
+#X restore 10 287 pd Observation;
+#X floatatom 9 424 5 0 0 0 - - -;
+#X floatatom 21 442 5 0 0 0 - - -;
+#X text 113 413 Note Number;
+#X text 113 441 Tempo;
+#X symbolatom 31 483 10 0 0 0 - - -;
+#X text 114 482 Cue Name;
+#X floatatom 42 506 5 0 0 0 - - -;
+#X floatatom 54 529 5 0 0 0 - - -;
+#X obj 67 555 bng 20 250 50 0 empty empty empty 17 7 0 10 -233017 -1
+-1;
+#X text 114 558 Bang on successful score load;
+#X text 130 188 Basic;
+#X text 183 187 Basic Scoring;
+#X msg 184 303 printfwd;
+#X obj 83 350 r antescofo-mess;
+#X msg 357 209 nextevent;
+#X msg 357 229 previousevent;
+#X msg 357 249 nextlabel;
+#X msg 357 270 nextfwd;
+#X text 355 189 Score Browsing;
+#X msg 234 371 verbosity \$1;
+#X floatatom 357 349 5 0 0 0 - - -;
+#X symbolatom 357 292 10 0 0 0 - - -;
+#X msg 431 291 gotocue \$1;
+#X msg 396 310 gotobeat \$1;
+#X floatatom 357 311 5 0 0 0 - - -;
+#X msg 234 350 0;
+#X msg 264 350 1;
+#X msg 31 460 set \$1;
+#X obj 185 223 openpanel;
+#X obj 186 206 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 185 242 score \$1;
+#N canvas 932 338 223 198 Audio 0;
+#X obj 22 64 openpanel;
+#X msg 22 85 open \$1;
+#X obj 22 107 readsf~;
+#X obj 23 13 inlet;
+#X obj 22 37 route bang;
+#X obj 22 134 outlet~;
+#X obj 88 85 r sf-mess;
+#X obj 89 107 adc~ 1;
+#X obj 88 167 dac~ 1;
+#X obj 112 137 snapshot~;
+#X obj 161 168 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 5 0;
+#X connect 2 0 8 0;
+#X connect 2 0 9 0;
+#X connect 3 0 4 0;
+#X connect 4 0 0 0;
+#X connect 4 1 2 0;
+#X connect 6 0 2 0;
+#X connect 7 0 5 0;
+#X connect 7 0 9 0;
+#X connect 9 0 10 0;
+#X restore 10 241 pd Audio;
+#X obj 10 205 bng 30 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 58 208 tgl 30 0 empty sf-start empty 17 7 0 10 -228920 -15046
+-1 0 1;
+#N canvas 734 22 450 345 ReadMeFirst 0;
+#X text 22 238 Antescofo is gracious to Marco Stroppa and other composers
+and thanks to their continuous curiosity continues to go further.;
+#X text 21 18 This is Antescofo version 0.3x;
+#X text 22 47 Antescofo~ is a modular polyphonic Score Following system
+as well as a Synchronous Programming language for musical composition.
+The module allows for automatic recognition of music score position
+and tempo from a realtime audio Stream coming from performer(s) \,
+making it possible to synchronize an instrumental performance with
+computer realized elements. The synchronous language within Antescofo
+allows flexible writing of time and interaction in computer music.
+Antescofo started out in close collaboration with the composer Marco
+Stroppa. Antescofo intends to expand the paradigm of synchronization
+and score following and tends towards a tool for writing of time and
+interaction in computer music \, for both composition and performance.
+Therefore \, it will evolve continually.;
+#X text 22 284 see: http://imtr.ircam.fr/imtr/Antescofo;
+#X text 22 301 Mailing-list / Forum: http://listes.ircam.fr/wws/info/antescofo
+;
+#X restore 558 6 pd ReadMeFirst;
+#N canvas 732 22 471 531 ScoreLanguage 0;
+#X text 5 5 Antescofo - Score Language;
+#X text 3 153 Language Syntax:;
+#X text 4 364 Language Conventions:;
+#X text 19 381 As a convention: (1) all commands are upper-cased. (2)
+a space is required after and before the paranthesis for the TRILL
+and MULTI class base note lists.;
+#X text 4 430 Importing and Exporting:;
+#X text 19 446 As of version 0.3 Antescofo only accepts its own score
+language. The commercial NOTEABILITY software now provides an export
+option for Antescofo. In near future;
+#X text 4 494 An external Tutorial will soon get deeper into these
+concepts! For questions: cont@ircam.fr;
+#X text 17 84 Antescofo's principal score description is a text-based
+simple description of events in the score. It uses a minimum number
+of commands that can define various musical situations often observed
+in a musical score. See examples in the help folder.;
+#N canvas 0 22 457 167 BPM 0;
+#X text 7 6 BPM <float>;
+#X text 19 25 Indicating the tempo in Beat Per Minute value. Your score
+MUST start with this value and it can also be placed in the middle
+of a score wherever desired.;
+#X text 20 95 The BPM command can also be used to change the tempo
+in the middle of a score. In this case \, using it as above will INITIALIZE
+the tempo to the given value \, unless a third argument '@modulate'
+is present. In this case the new tempo is modulated using the running
+tempo of the musician.;
+#X text 20 71 This is probably the first thing that appear in your
+scores!;
+#X restore 40 174 pd BPM;
+#X text 107 174 Tempo init & modulation;
+#N canvas 0 22 450 212 NOTE 0;
+#X text 17 27 Indicate a regular music event including PITCH (MIDI
+or MIDIcent) (for <float1>) BEAT DURATION (for <float2> and a string
+as the event label (optional).;
+#X text 17 69 A Pitch value of ZERO indicates silence.;
+#X text 2 10 NOTE <float1> <float2> <string>;
+#X text 17 88 The Beat duration can be ZERO \, indicating an appagiatura
+or out-of-time event (not contributing to tempo).;
+#X restore 39 196 pd NOTE;
+#N canvas 0 22 452 305 TRILL 0;
+#X text 5 12 TRILL ( <float1> ... <floatN> ) <floatN+> <string>;
+#X text 20 32 Indicates a TRILL event with base notes of <float1> through
+<floatN> in MIDICENTs and the overall time value of <floatN+> in beats
+and an optional label (<string>).;
+#X text 20 74 For example;
+#X text 110 88 TRILL ( 6000 6200 ) 1 trill1;
+#X text 20 104 In wider terms the TRILL class is ONE event that possess
+several sub-events in time - but all these sub-events contribute to
+one global event in time.;
+#X text 17 146 The trill class can successfully encode timed improvisation
+boxes where events do not have any specfic orders in time.;
+#X text 20 173 The TRILL class also accepts grouped events inside (or
+chords). The following example shows a TRILL between two chords:;
+#X text 111 217 TRILL ((60 62) (66 68)) 1 trill_2;
+#X restore 40 239 pd TRILL;
+#N canvas 0 22 434 97 CHORD 0;
+#X text 2 11 CHORD ( <float1> ... <floatN> ) <floatN+> <string>;
+#X text 18 29 As the name suggests CHORD class represents a set of
+observations that happen simultaneously in time as one solid event.
+The equivalent of this is obviously a chord in classical music notation.
+;
+#X restore 39 217 pd CHORD;
+#X text 110 238 Alternating global event (monophonic/polyphonic);
+#N canvas 0 22 436 123 MULTI 0;
+#X text 5 11 MULTI ( <float1> ... <floatN> ) <floatN+> <string>;
+#X text 19 31 Multi class is the same as Trills except that events
+are ordered in time and we need ACCESS to each of them. Think of the
+floats (MIDIcents) between paranthesis as a table of values in time.
+;
+#X text 19 79 The MULTI class can successfully encode continuous events
+such as Glissandi.s;
+#X restore 39 259 pd MULTI;
+#X text 110 259 Continuous-timed global event (mono/polyphonic);
+#X text 110 218 Single polyphonic event;
+#X text 106 195 single monophonic event;
+#N canvas 0 22 431 212 VARIANCE 0;
+#X text 2 8 VARIANCE <float>;
+#X text 18 26 The Audio detection module in Antescofo can also be controlled
+through its sensitivity to the exactness of received observations.
+This option is controlled by the VARIANCE syntax which accepts values
+between zero and one. In case of pitch (polyphonic) score following
+\, this value is in semi-tone fractions. For non-note events \, the
+variance should be between 0 and 1 thus 0.03 means 3% of the mean (or
+centered event in the score.). The higher the variance \, the more
+open the detection becomes to entered observations Hence \, setting:
+;
+#X text 111 151 VARIANCE 0.5;
+#X text 17 169 in a score \, indicates that after that point in the
+score \, Antescofo has a tolerance of a quarter-note from provided
+pitches. The default value is 0.3;
+#X restore 40 281 pd VARIANCE;
+#X text 131 283 Context-sensitive Detection Tolerance;
+#N canvas 947 22 450 74 fermata 0;
+#X text 5 8 TEMPO OFF / TEMPO ON;
+#X text 20 21 Turns tempo decoding on or off for places in the score
+where the tempo should not be updated. A typical example is a FERMATA.
+;
+#X restore 39 302 pd fermata;
+#X text 131 303 Tempo decoding on/off;
+#X text 38 327 * Anything following by a semi-collon is considered
+a comment and not processed by the parser.;
+#X text 18 28 The score language of Antescofo consists of describing
+events to be detected by the follower. It has 6 main syntaxes that
+can describe almost all existing classical/contemporary pitched scores.
+;
+#X restore 558 137 pd ScoreLanguage;
+#X text 9 188 Open;
+#X text 45 188 Play/Stop;
+#X obj 12 81 hradio 30 1 0 4 empty empty empty 0 -8 0 10 -262144 -1
+-1 1;
+#X obj 440 78 tgl 30 0 play-start empty empty 17 7 0 10 -4034 -201355
+-1 0 1;
+#X text 123 63 Start/Stop;
+#X text 11 62 Ravel;
+#X text 39 112 Reich;
+#X text 67 63 Stroppa;
+#X text 96 113 Boulez;
+#N canvas 732 22 462 643 AudioObservation 0;
+#X text 15 12 Antescofo - Audio Observation:;
+#X text 29 30 Antescofo's default observation mode is "audio" and based
+on pitch and can handle multiple pitch scores (and audio). But it is
+also capable of handling other inputs \, such as control messages and
+user-defined audio features.;
+#X text 30 95 To tell Antescofo what to follow \, you need to define
+the type of input during object instantiation. There are several hardcoded
+input types which are: "hz" \, "midi" \, and "kl". "hz" refer to raw
+pitch input as control messages in the inlet (e.g. using fiddle~ or
+yin~ objects). "midi" refers to midi pitch inputs. And "kl" is the
+(default) audio observation module based on (multiple) pitch. In the
+"hz" or "midi" modes \, polyphony is not supported yet and We encourage
+you to use raw audio instead!;
+#X text 31 217 Note: The MIDI option is NOT polyphonic but the audio
+(or KL) version is!;
+#X text 10 254 Analysis Parameters:;
+#X text 30 282 In the default audio observation mode \, you need to
+define the analysis parameters which are window size \, and hop size
+in sample numbers. Antescofo automatically buffers audio and does the
+required analysis. Your choice of window size and hopesize could alter
+the performance and computation of the system! Default value is [2048
+1024]. For example \, when following piano music \, you might want
+to set window size to 4096 (for better spectral resolution). If you
+want more exact timing \, reduce the hopsize (and pay more CPU).;
+#X msg 4 413 analysis 2048 256;
+#X obj 4 450 s antescofo-mess;
+#X text 146 410 This means that you want an analysis of 4096 samples
+with 1024 sample steps.;
+#X text 30 490 Notes:;
+#X text 30 516 (1) For efficiency \, keep both parameters as powers
+of 2;
+#X text 29 531 (2) For an instrument with a limited mid-pitch range
+(flute / Sax \, etc.) analysis parameters of 2048 512 would be sufficient.
+For instruments with large frequency range \, use 4096;
+#X text 29 581 (3) Very fast passages require small steps for recognition.
+In this case \, consider reducing the second parameter.;
+#X connect 6 0 7 0;
+#X restore 558 60 pd AudioObservation;
+#N canvas 731 22 573 831 ScoreBrowsing 0;
+#X text 31 296 You can either browse the score by hand (if Antescofo
+is being used as a tempo-enhanced Qlist) or control Antescofo in live
+audio performances (in case of mis-detection or ... ) and/or a rehearsal
+setting.;
+#X text 30 348 The following commands allows browsing and jumping to
+various places in the score specified by the user. Note that these
+commands can freely be used during live performance and should not
+cause any perturbation to the system.;
+#X text 31 420 Click to activate a sample score and interact with it.
+;
+#X obj 32 446 bng 25 250 50 0 empty empty empty 17 7 0 10 -4096 -1
+-1;
+#X obj 32 506 s antescofo-mess;
+#X msg 0 544 nextevent;
+#X msg 0 574 previousevent;
+#X msg 0 608 nextlabel;
+#X msg -1 643 nextfwd;
+#X msg 0 687 gotobeat \$1;
+#X msg 0 732 gotocue \$1;
+#X obj -1 764 s antescofo-mess;
+#X text 107 544 Jump to next event in score (a silence is not an event)
+;
+#X text 107 572 Same but for previous event!;
+#X text 107 611 Jump and execute onto next labeled event in the score
+(useful for jumping between different measures if you have put labeles
+on them...).;
+#X text 108 647 Jump and execute onto next event in the score which
+sends a value to a Max/Pd symbol using the FWD commands defined in
+the score.;
+#X text 107 689 Jump and start on the accumulated beat value in the
+score (useful with NoteAbility);
+#X text 108 727 Jumps to and starts on the given label. Useful for
+rehearsals!;
+#X text 72 790 Note that TRILL and MULTI classes are considered as
+'one' event although they correspond to a set of out-of-time or in-time
+events (respectively).;
+#X msg 32 481 score fwd_examples/fwd.antescore.txt;
+#X text 0 280 Score Browsing:;
+#X text -3 2 Antescofo - Performance Controls;
+#X text 6 22 Behavior Controls;
+#X text 23 42 To follow or not follow...;
+#X obj 10 67 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
+;
+#X msg 10 87 suivi \$1;
+#X obj 10 260 s antescofo-mess;
+#X text 104 67 Some people tend to use Antescofo as a tempo-enhanced
+polyphonic Qlist using its action language for sequencing \, therefore
+not using the follower. In another circumstance \, in critical situations
+you might want to stop the follower alone without interfering actions
+or just in panic or test situations. In such situations \, you can
+use the [suivi \$1] command to turn the follower on and off. When the
+follower is off \, Antescofo is like a sequencer. This is by default
+ON.;
+#X text 25 180 Tempo Control:;
+#X floatatom 32 198 5 0 0 0 - - -;
+#X msg 32 216 tempo \$1;
+#X text 105 198 When using Antescofo as a sequencer \, (and when actions
+are written in relative time) you can simulate tempo changes by just
+modifying the tempo value through the [tempo \$1] message using a float
+in BPM.;
+#X connect 3 0 19 0;
+#X connect 5 0 11 0;
+#X connect 6 0 11 0;
+#X connect 7 0 11 0;
+#X connect 8 0 11 0;
+#X connect 9 0 11 0;
+#X connect 10 0 11 0;
+#X connect 19 0 4 0;
+#X connect 24 0 25 0;
+#X connect 25 0 26 0;
+#X connect 29 0 30 0;
+#X connect 30 0 26 0;
+#X restore 556 212 pd ScoreBrowsing;
+#X obj 9 387 antescofo~ @outlets notenum certainty;
+#X text 113 507 Detected MIDI note number;
+#X text 114 530 Certainty of detection (0 \, 1);
+#X text 10 8 Antescofo - Anticipatory Score Following (beta v. 0.39)
+;
+#X text 11 22 by Arshia Cont \, UCSD/Ircam \, 2007-2010;
+#X text 333 434 NOTE: This help file needs severe updates!;
+#X text 331 450 You can help by getting involved in the mailing list:
+;
+#X text 331 474 http://listes.ircam.fr/wws/info/antescofo;
+#N canvas 827 22 379 175 Sounds 0;
+#X obj 9 9 r click1;
+#X obj 9 34 bng 30 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 776 481 450 300 clickgen 0;
+#X obj 194 22 inlet;
+#X obj 16 21 noise~;
+#X obj 126 105 vline~;
+#X obj 19 154 *~;
+#X obj 16 86 *~ 0.4;
+#X msg 158 72 1 10 \, 0 10 10;
+#X obj 54 47 osc~ 1000;
+#X obj 20 241 outlet~;
+#X obj 19 201 *~ 0.5;
+#X connect 0 0 5 0;
+#X connect 1 0 4 0;
+#X connect 2 0 3 1;
+#X connect 3 0 8 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 0;
+#X connect 6 0 3 0;
+#X connect 8 0 7 0;
+#X restore 8 79 pd clickgen;
+#X obj 100 33 bng 30 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#N canvas 776 481 450 300 clickgen 0;
+#X obj 194 22 inlet;
+#X obj 16 21 noise~;
+#X obj 126 105 vline~;
+#X obj 19 154 *~;
+#X obj 16 86 *~ 0.4;
+#X msg 158 72 1 10 \, 0 10 10;
+#X obj 20 241 outlet~;
+#X obj 19 201 *~ 0.5;
+#X obj 54 47 osc~ 1200;
+#X connect 0 0 5 0;
+#X connect 1 0 4 0;
+#X connect 2 0 3 1;
+#X connect 3 0 7 0;
+#X connect 4 0 3 0;
+#X connect 5 0 2 0;
+#X connect 7 0 6 0;
+#X connect 8 0 3 0;
+#X restore 99 78 pd clickgen;
+#X obj 100 8 r click2;
+#X obj 9 136 dac~ 1 2;
+#X obj 213 136 noteout;
+#X obj 211 44 r mnote;
+#X obj 212 102 makenote;
+#X obj 211 69 unpack 0 0 0;
+#X obj 279 139 print mnote;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 2 0 6 0;
+#X connect 3 0 4 0;
+#X connect 4 0 6 1;
+#X connect 5 0 3 0;
+#X connect 8 0 10 0;
+#X connect 9 0 7 0;
+#X connect 9 1 7 1;
+#X connect 10 0 9 0;
+#X connect 10 1 9 1;
+#X connect 10 2 9 2;
+#X restore 569 567 pd Sounds;
+#X text 11 46 Choose a Score Following Demo:;
+#X obj 371 79 hradio 30 1 0 2 empty empty empty 0 -8 0 10 -262144 -1
+-1 0;
+#N canvas 27 310 609 536 SuiviDemos 0;
+#X obj 14 9 inlet;
+#X obj 382 24 r demo-start;
+#X obj 381 176 s sf-start;
+#X obj 395 152 s antescofo-mess;
+#X obj 431 113 s sf-start;
+#X msg 476 74 start;
+#X obj 476 129 s antescofo-mess;
+#X obj 381 74 t 0 b;
+#X msg 396 95 stop;
+#X obj 381 50 route 0 1 ------------;
+#X obj 15 87 t b b;
+#X obj 45 128 s antescofo-mess;
+#X obj 15 170 s sf-mess;
+#X msg 15 147 open audio/Ravel-wTrills.wav;
+#X obj 33 188 t b b;
+#X obj 15 51 route 0 1 2 3 4 5 6 7;
+#X obj 32 251 s sf-mess;
+#X obj 63 269 s antescofo-mess;
+#X obj 49 288 t b b;
+#X obj 49 347 s sf-mess;
+#X obj 79 365 s antescofo-mess;
+#X obj 68 396 t b b;
+#X obj 68 455 s sf-mess;
+#X obj 98 473 s antescofo-mess;
+#X msg 67 437 open audio/A2K-Sec6-1-Normal.wav;
+#X msg 32 231 open audio/DPA4061-6-2.wav;
+#X obj 363 284 s sf-start;
+#X obj 366 245 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 431 74 t b b;
+#X msg 430 93 1;
+#X msg 382 125 0;
+#X msg 48 329 open audio/littlei-levine_m1.wav;
+#X msg 46 110 score following_examples/ravel_Score.txt;
+#X msg 63 208 score following_examples/Reich_Score.txt;
+#X msg 99 418 score following_examples/antheme_secVI.score.txt;
+#X msg 78 309 score following_examples/little1.txt;
+#X connect 0 0 15 0;
+#X connect 1 0 9 0;
+#X connect 5 0 6 0;
+#X connect 7 0 30 0;
+#X connect 7 1 8 0;
+#X connect 8 0 3 0;
+#X connect 9 0 7 0;
+#X connect 9 1 28 0;
+#X connect 10 0 13 0;
+#X connect 10 1 32 0;
+#X connect 13 0 12 0;
+#X connect 14 0 25 0;
+#X connect 14 1 33 0;
+#X connect 15 0 10 0;
+#X connect 15 1 14 0;
+#X connect 15 2 18 0;
+#X connect 15 3 21 0;
+#X connect 18 0 31 0;
+#X connect 18 1 35 0;
+#X connect 21 0 24 0;
+#X connect 21 1 34 0;
+#X connect 24 0 22 0;
+#X connect 25 0 16 0;
+#X connect 27 0 26 0;
+#X connect 28 0 29 0;
+#X connect 28 1 5 0;
+#X connect 29 0 4 0;
+#X connect 30 0 2 0;
+#X connect 31 0 19 0;
+#X connect 32 0 11 0;
+#X connect 33 0 17 0;
+#X connect 34 0 23 0;
+#X connect 35 0 20 0;
+#X restore 12 127 pd SuiviDemos;
+#N canvas 27 310 601 319 ActionDemos 0;
+#X obj 14 9 inlet;
+#X obj 381 116 s antescofo-mess;
+#X obj 381 50 route 0 1 ------------;
+#X obj 15 87 t b b;
+#X obj 45 128 s antescofo-mess;
+#X obj 33 188 t b b;
+#X obj 63 269 s antescofo-mess;
+#X obj 363 284 s sf-start;
+#X obj 366 245 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 15 51 route 0 1;
+#X obj 382 24 r play-start;
+#X msg 376 82 stop;
+#X msg 434 83 play;
+#X msg 46 110 score fwd_examples/1-LFWD_Demo.asco.txt;
+#X msg 63 208 score fwd_examples/2-PolyphonicQueues.asco;
+#X connect 0 0 9 0;
+#X connect 2 0 11 0;
+#X connect 2 1 12 0;
+#X connect 3 1 13 0;
+#X connect 5 1 14 0;
+#X connect 8 0 7 0;
+#X connect 9 0 3 0;
+#X connect 9 1 5 0;
+#X connect 10 0 2 0;
+#X connect 11 0 1 0;
+#X connect 12 0 1 0;
+#X connect 13 0 4 0;
+#X connect 14 0 6 0;
+#X restore 371 120 pd ActionDemos;
+#X obj 143 81 tgl 30 0 demo-start empty empty 17 7 0 10 -131008 -201355
+-1 0 1;
+#X text 368 44 Choose Action Demo:;
+#X msg 356 370 tempo \$1;
+#X text 403 348 Change the performance tempo manually...;
+#N canvas 732 22 452 816 input/output 0;
+#X text 6 13 Antescofo - Inlet/Outlet Settings;
+#X text 6 40 Outlets:;
+#X text 14 59 By default \, Antescofo's outlets are: Main outlets (for
+note index and messages) \, tempo (BPM / Float) \, and score label
+(symbol) plus an additional BANG sent each time a new score is loaded.
+;
+#X text 16 116 As of version 0.36-11 \, you can sent out more of the
+internal data structure as outlets that will appear right before the
+last bang outlet (see main page). To use this \, you'd call the @outlets
+operator with one of the following codenames:;
+#X text 33 185 notenum;
+#X text 117 188 MIDI pitch number or sequenced list for trills/chords
+;
+#X text 33 227 beatnum;
+#X text 116 229 Cumulative score position in beats;
+#X text 33 253 anteIOI;
+#X text 115 255 Anticipated IOI duration in ms and in runtime relative
+to detected tempo;
+#X text 33 295 certainty;
+#X text 115 299 Antescofo's live certainty during detections;
+#X text 32 336 scoretempo;
+#X text 115 338 Current tempo in original score (BPM);
+#X text 34 370 endbang;
+#X text 117 373 Bang when the last (non-silence) event in the score
+is detected;
+#X text 5 422 Inlets & Modularity:;
+#X text 17 448 As of version 0.3 you can define your own observation
+module - name it and invoke it in the score. You can also use multiple
+concurrent representations of the audio stream for both recognition
+and scripting of your interactive scores.;
+#X text 16 524 By putting any name preceded after '@inlets' operator
+you are telling Antescofo that this inlet is accepting a LIST and I
+call this <string>. By naming this inlet later in your score you can
+assign Antescofo to use the right inlet when the time arrives for recognitions
+and actions. The following example shows the modular aspect of Antescofo.
+Here I am assigning three inlets with their proper names that can be
+invoked by the @ operator in the score.;
+#X obj 89 641 antescofo~ @inlets miller mything hz;
+#X text 19 668 Antescofo's detection technology is safe for use with
+noisy environments and noisy detectors. You can use any of your favourite
+pitch detector algorithms as far as they provide the correct output.
+For this help file we use fiddle~ because it is free and despite its
+noisiness (handled by antescofo) it always outputs the correct pitch
+some time during its life expansion.;
+#X text 20 771 NOTE: The modular multi-input in Antescofo is experimental.
+Stay tuned for major future release/tutorials/examples on this line!
+;
+#X restore 558 26 pd input/output;
+#N canvas 732 22 450 347 PedalOption 0;
+#X text 4 8 Antescofo - Pedal Option;
+#X text 20 35 In the default audio (pitch) mode \, you can reduce resonances
+on instruments that produce them (such as sustain pedal on Piano and
+Vibraphone) by enabling the pedal option. Using the pedal option increases
+CPU so use it with care.;
+#X obj 33 110 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 33 130 pedal \$1;
+#X floatatom 136 111 5 0 0 0 - - -;
+#X msg 136 129 pedalcoeff \$1;
+#X obj 32 160 s antescofo-mess;
+#X text 21 191 The pedal option automatically removes previous resonances
+from the realtime audio observations! This is done by employing a pedal
+coefficient whose value is always between 0 and 1 and should be kept
+as small as possible (otherwise too much information might be removed
+and you'll experience unwanted jumps).;
+#X text 21 274 For extreme cases (sustain pedal in Piano or Vib.) we
+recommend a value of 0.3 \, and for normal situations a value of 0.1
+or less.;
+#X connect 2 0 3 0;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X restore 558 80 pd PedalOption;
+#N canvas 733 22 453 728 Calibration 0;
+#X text 5 6 Antescofo - Audio Calibration;
+#X text 26 27 The quality of audio input is of utmost importance for
+any recognition system and Antescofo is no exception! If the audio
+input is too low or corrupted \, Antescofo can no longer correctly
+detect events.;
+#X text 27 87 Antescofo comes with a built-in Calibration mode to help
+make sure there is enough audio level for the recognition system to
+work. You can use it by sending the "calibrate 1" message to Antescofo
+\, start sending audio to Antescofo (no need to "start") and watch
+the values sent from the left-most outlet with a prefix "calibration".
+Here \, I am showing them in a slider:;
+#X obj 30 185 r antescofo_calib;
+#X obj 29 215 unpack 0 0;
+#X floatatom 28 256 5 0 0 0 - - -;
+#X obj 28 285 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-258113 -4160 0 1;
+#X floatatom 206 257 5 0 0 0 - - -;
+#X obj 206 286 vsl 15 128 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-258113 -4160 0 1;
+#X text 233 299 << Reference pitch calibration MIDI 69 (440hz if tuned
+440) by default;
+#X text 51 301 << Energy Calibration;
+#X text 24 425 Antescofo calibration values are always between 0 and
+1 and can be interpreted as follows: Whenever there are "events" present
+in audio \, these values should be relatively high (>0.75) and in the
+contrary (non-events such as silence \, hall noise etc.) it should
+be relatively low (<0.5). It is best practice to test these conditions
+before any use.;
+#X text 25 524 If these conditions are NOT met \, you need to change
+the input level of Antescofo (from console) until you obtain the conditions.
+This is why it is best practice to separate Antescofo adc~ from that
+of the rest of the patch. This is the preferred method for most users.
+;
+#X text 27 605 Make sure the pitch calibration is relatively high when
+that pitch is played by the musician in different nuances (pp to ff).
+If the energy calibration looks good but the pitch calibration is still
+low \, try changing the "tune" message or "nofharm" to adapt to the
+specific instrument being used.;
+#X obj 163 184 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X msg 163 204 calibrate \$1;
+#X obj 163 229 s antescofo-mess;
+#X msg 263 204 calibrate 1 57;
+#X text 265 176 2nd argument is reference pitch;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 1 7 0;
+#X connect 5 0 6 0;
+#X connect 7 0 8 0;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 17 0 16 0;
+#X restore 558 99 pd Calibration;
+#N canvas 742 22 474 680 ActionLanguage 0;
+#X text 1 6 Antescofo - Action Language;
+#X text 15 26 Antescofo can be used for synchronous programming of
+electronic events relative to a live performance. Concretely \, Antescofo
+has an internal scheduler that can be used to send remote messages
+to Max or Pd variables. This way \, a score contains instrumental events
+(for detection) associated with actions that should be undertaken upon
+each detection. This is achieved by using a limited number of primitives
+to describe live actions within (instrumental) scores.;
+#X text 16 144 Below are very-basic definitions of action primitives
+in Antescofo. For full details \, refer to the (yet to come) PDF documentation.
+;
+#N canvas 963 22 423 326 GFWD 0;
+#X text 4 11 GFWD;
+#X text 17 280 GFWDs are by default prioritized (will be never missed
+unless explicitly KILLed).;
+#X text 18 26 You can GROUP messages together to compose polyphonic
+(concurrent) messaging systems and with independent (relative) timing.
+;
+#X text 20 71 Each GFWD has a NAME and the group can have optional
+beat-delays (for sequencing). The messages would then fit in brackets
+for the group.;
+#X text 4 127 I CAN NOT PUT THE SYNTAX HERE! Pd DOES NOT ALLOW ME TO
+TYPE BRACKETS!!!!! See an example in the fwd_example folder for now!!!!!
+;
+#X text 4 176 GFWDs allow polyphonic messages all synched to a global
+and varying tempo.;
+#X text 65 64 comment;
+#X restore 16 246 pd GFWD;
+#X text 113 245 Grouped polyphonic/concurrent messages;
+#N canvas 949 22 464 476 LFWD 0;
+#X text 1 5 LFWD;
+#X text 13 24 You can also compose PERIODIC messages \, where the period
+is given is musical beats (realized in run-time using tempo). In this
+case \, you would associate a NAME to the process which you can use
+later to stop (or KILL) the process. The command used for this is LFWD
+(short for Loop Forward) and the syntax is as follows:;
+#X text 43 113 LFWD <delay> <name> <period> <symbol> <message(s)>;
+#X text 14 145 where <delay> and <period> are float numbers indicating
+beat-time. The delay value is optional. LFWD creates a process called
+<name> and when the time arrives it sends it periodically to Max. The
+clock-time of the period is always synched to the tempo so that the
+musical period stays the same while the clock-time period is changing
+with the tempo. You can stop each LFWD process at any time using the
+following command:;
+#X text 14 286 where again \, <delay> value is optional (and can be
+in relative or absolute time). The relative Metronome in the STEVE
+REICH example of the main help patch effectively uses a LFWD that clicks
+on every beat.;
+#X text 15 346 LFWD can also be used in groups for creation of independent
+(and complex) rhythmic structures:;
+#X text 31 388 CAN NOT TYPE BRACKETS! SEE EXAMPLE in fwd_example folder.
+;
+#X text 16 420 In this case \, it is user's responsibility to make
+sure that the sum of <delay>s do not surpass the given <period> for
+the group (otherwise they won't be contained in the loop!).;
+#X text 36 256 KILL <delay> <name>;
+#X restore 16 272 pd LFWD;
+#X text 115 270 Looped polyphonic/concurrent messages;
+#N canvas 951 22 450 300 KILL 0;
+#X text 8 8 KILL <delay> <name>;
+#X text 27 34 KILL can be used to (immediately) terminate ongoing (parallel)
+processes during an action. The process to be killed is refered to
+by its name thus either GFWD or LFWD \, with an additional delay in
+beat-time or absolute-time (if immediately followed by 's').;
+#X text 29 108 For LFWDs \, you can also remove a single message within
+a group if the message has a name attribute:;
+#X text 90 149 KILL <delay> <sub-name> OF <name>;
+#X text 28 178 where <sub-name> is the message's name attribute and
+<name> is its parent name!;
+#X text 29 215 See the LFWD_Example.asco.txt in the fwd_example folder.
+;
+#X restore 16 298 pd KILL;
+#X text 114 297 Terminating an ongoing process;
+#X text 13 422 Nesting:;
+#X text 12 440 It is possible (from version 0.39+) to nest groups.
+For example \, putting a GFWD inside a LFWD or vice versa \, and up
+to any order. This feature is particularly useful for having independently-timed
+and concurrent computer music processes.;
+#X text 14 358 The best way to imagine action commands is to imagine
+music score writing! Each event in a music score has a musical beat
+duration and corresponds to some sort of 'message' to perform for the
+musician.;
+#X text 15 188 The following constitute Antescofo's action primitives.
+Refer to examples in fwd_examples for more details:;
+#X obj 14 560 bng 25 250 50 0 empty empty empty 17 7 0 10 -4096 -1
+-1;
+#X msg 14 595 score scores/fwd.antescore.txt;
+#X obj 14 648 s antescofo-mess;
+#X obj 383 554 r print;
+#X obj 383 579 print;
+#X obj 315 580 print;
+#X obj 315 555 r print1;
+#X obj 313 612 r looper1;
+#X obj 313 633 bng 30 250 50 0 empty empty empty 17 7 0 10 -262144
+-258049 -1;
+#X obj 387 611 r looper1;
+#X obj 387 633 bng 30 250 50 0 empty empty empty 17 7 0 10 -262144
+-258049 -1;
+#X msg 26 616 nextevent;
+#X msg 100 616 previousevent;
+#X obj 275 576 timer;
+#X obj 286 555 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 274 597 5 0 0 0 - - -;
+#X obj 429 574 timer;
+#X obj 440 553 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 428 595 5 0 0 0 - - -;
+#X text 10 526 Click below to load a sample score \, browse it and
+watch how the variables are invoked.;
+#X text 113 221 Synchronous message passing to Pd;
+#N canvas 734 22 466 820 messaging 0;
+#X text 109 692 CHORD (56 65) 1 sample_chord;
+#X text 111 652 TRILL (60 62) 3 Sample_trill;
+#X text 110 626 BPM 60;
+#N canvas 734 22 450 300 FWD 0;
+#X text 14 27 FWD command bounds a message in <mess> to a symbol (<sym>)
+whenever visited during score execution. An optional delay in beat
+values (coupled with real-time detected tempo) can be used. This is
+similar to a qlist integrated in the score.;
+#X text 14 81 During realtime detection \, if the event corresponding
+to a FWD is missed \, this action is canceled correspondingly.;
+#X text 13 114 The optional delay of a FWD message is in relative time
+except if it is immediately followed by 's' making it absolute in seconds.
+;
+#X text 40 278 CHORD (56 65) 1 sample_chord;
+#X text 63 261 FWD 1s print after one-beat + one-sec;
+#X text 62 248 FWD 1 print after one-beat delay;
+#X text 62 236 FWD print this is printed via [r print];
+#X text 38 223 TRILL (60 62) 3 Sample_trill;
+#X text 39 196 BPM 60;
+#X text 38 210 NOTE 69 1 Sample_note;
+#X text 13 158 You can thus make sequences synched to an instrumental
+event. Sample score:;
+#X text 69 8 SYNTAX: FWD <beat-delay> <symbol> <mess>;
+#X restore 137 829 pd FWD;
+#X text 137 677 1 print after one-beat delay;
+#X text 69 8 SYNTAX: ?<delay> <symbol> <mess>*( \, <mess>);
+#X text 14 27 Any line NOT followed by a keyword (of score language)
+is a potential "message action". Message actions are similar to "send
+syntax" in a Max/Pd message box \, and are bounded to a "score event":
+;
+#X msg 21 96 \; print_demo message1 \; print_demo mess2 \, mess3;
+#X obj 22 145 r print_demo;
+#X obj 22 167 print print_demo;
+#X text 250 106 BPM 60;
+#X text 269 137 print_demo message1;
+#X text 270 153 print_demo mess2 \, mess3;
+#X text 250 170 NOTE 65 2;
+#X text 39 268 * Note that similar to Max/Pd \, commas send messages
+sequentially.;
+#X text 40 297 * From hereon \, <message> is equivalent to this (Max/Pd/Antescofo)
+message composition.;
+#X text 19 330 Similar to the [qlist] object \, you can optionally
+associate <delay> values to a message action. <delay> values are:;
+#X text 43 362 * In beat-time (float) relative to the score tempo.
+;
+#X text 43 381 * Or in absolute time if followed immediate by an 's'
+;
+#X text 20 399 The delay values will be evaluated in real-time using
+the latest decoded tempo of performance by Antescofo.;
+#X text 6 433 Locality \, Priority \, Security... :;
+#X text 22 454 What would happen if the associated event is not detected
+or not played by the musician?;
+#X text 46 484 * By default \, all message actions are PRIORITIZED
+so that if the associated event is missed \, they will be sent in order
+(and before current actions) to Max/Pd and with ZERO DELAY.;
+#X text 46 537 * To override this behavior (e.g. message actions whose
+span is LOCAL on the score event) \, you can add a '@local' attribute
+to the message. This way \, if the associated event is missed they
+won't be seen!;
+#X text 20 594 Example:;
+#X text 110 639 NOTE 69 1 note1;
+#X text 21 713 Here \, in case of missing "note1" \, the first print
+will NOT be seen and the second will go out immediately and before
+any other action.;
+#X text 137 665 print this is printed via [r print] @local;
+#X text 3 755 Old compatibility:;
+#X text 23 770 The two messaging schemes above correspond to the old
+FWD and PFWD syntaxes. They still work but we highly recommend using
+the new style as it beautifully marries with regular Max/Pd and eases
+copy/paste programming:;
+#X text 15 198 The two messaging schemes above correspond to the old
+FWD and PFWD syntaxes. They still work but we highly recommend using
+the new style as it beautifully marries with regular Max/Pd and eases
+copy/paste programming:;
+#N canvas 0 22 450 142 PFWD 0;
+#X text 3 11 PFWD <beat-delay> <symbol> <mess>;
+#X text 17 27 This is equivalent to FWD except that they are NOT cancelled
+if the corresponding event is not seen and undertaken with ZERO DELAY
+\, and before any consequent action. (P = Priority);
+#X text 17 78 In the above example \, if the the FWDs and changed to
+PFWD \, and the CHORD event appears to Antescofo after the NOTE \,
+all the actions are undertaken immediately \, in order and with no
+delay.;
+#X restore 242 827 pd PFWD;
+#X text 109 611 \; Antescofo Score Snippet;
+#X text 249 89 \; Antescofo score snippet;
+#X text 249 121 NOTE 60 1;
+#X connect 8 0 9 0;
+#X restore 17 221 pd messaging;
+#X text 16 326 Missing [pd macros];
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 16 0 17 0;
+#X connect 16 0 30 0;
+#X connect 19 0 18 0;
+#X connect 19 0 27 0;
+#X connect 20 0 21 0;
+#X connect 22 0 23 0;
+#X connect 24 0 15 0;
+#X connect 25 0 15 0;
+#X connect 26 0 28 0;
+#X connect 27 0 26 0;
+#X connect 27 0 26 1;
+#X connect 29 0 31 0;
+#X connect 30 0 29 0;
+#X connect 30 0 29 1;
+#X restore 558 157 pd ActionLanguage;
+#N canvas 734 22 451 791 ScoreLoading 0;
+#X text 4 4 Antescofo - Score Loading;
+#X text 20 26 In order to use Antescofo \, you would first need to
+load a (text) score in Antescofo format described before that contains
+instrumental (and eventually action) events.;
+#X text 3 70 Loading scores:;
+#X text 23 109 [score] or [read] followed by a filename or fullpath
+to a file and loaded if it can be found by Pd's filepaths.;
+#X text 23 160 You can reload a (previously loaded) score anytime.
+This is useful and obligatory if you are editing your text score while
+using Antescofo.;
+#X text 22 216 Once a score loading is over \, a BANG is automatically
+sent at the right-most outlet of Antescofo.;
+#X text 0 286 Preloading Scores:;
+#X text 21 352 You can PRELOAD a set of scores \, by giving each score
+a symbol (or name) for later recalls. This option is useful for pieces
+with several continuous sections each in separate files.;
+#X text 21 402 It is possible and safe to preload many scores at once
+(thanks to safe parallel processing).;
+#X text 24 455 Evoking [info] message to Antescofo would printout important
+information about current Antescofo settings to the Max window \, including
+the set of PRELOADed scores.;
+#X text 23 530 Sending a [clear] message to Antescofo will clear all
+preloaded scores.;
+#X text 24 595 You can start any preloaded score at anytime using its
+assigned symbol/name during definition.;
+#X text 23 634 Doing this will make that score your "current score"
+where all single-score commands would affect (such as [reloadscore]).
+;
+#X obj 2 697 s antescofo-mess;
+#X msg 2 304 preload Ravel following_examples/ravel_score.txt;
+#X msg 2 328 preload Boulez following_examples/antheme_secVI.score.txt
+;
+#X msg 10 435 info;
+#X msg 10 506 clear;
+#X msg 12 572 start Boulez;
+#X obj 2 259 s antescofo-mess;
+#X msg 3 90 score following_example/Reich_Score.txt;
+#X msg 12 142 reloadscore;
+#X connect 14 0 13 0;
+#X connect 15 0 13 0;
+#X connect 16 0 13 0;
+#X connect 17 0 13 0;
+#X connect 18 0 13 0;
+#X connect 20 0 19 0;
+#X connect 21 0 19 0;
+#X restore 558 176 pd ScoreLoading;
+#X text 582 119 Scoring;
+#X text 582 44 Audio;
+#X text 583 195 Performing;
+#N canvas 732 22 493 435 Sequencing 0;
+#X text 3 5 Antescofo - Sequencing;
+#X text 19 26 Using the synchronous Action Language \, it is possible
+to use Antescofo as an intelligent and time synchronous sequencer like
+qlist and without the follower:;
+#X text 4 71 Playback:;
+#X text 29 111 The [play] message simply sequences from the beginning
+of the score to the end \, using given event timing and internal tempis
+\, and undertaking actions wherever available.;
+#X text 27 232 During playback \, you can change the tempo at anytime
+and reschedule the sequencer. You can use this feature along Max5 Transport
+by making Antescofo the tempo provider of Transport.;
+#X text 31 364 Given that your score events have labels \, you can
+start sequencing from that event by using the event's symbol label
+and the [playfrom] message to Antescofo. Try it below:;
+#X msg 6 95 play;
+#X msg 8 213 tempo \$1;
+#X floatatom 7 187 5 0 0 0 - - -;
+#X text 53 185 in BPM plz...;
+#X obj 7 290 s antescofo-mess;
+#X obj 7 155 s antescofo-mess;
+#X symbolatom 7 314 10 0 0 0 - - -;
+#X msg 7 332 playfrom \$1;
+#X obj 8 417 s antescofo-mess;
+#X connect 6 0 11 0;
+#X connect 7 0 10 0;
+#X connect 8 0 7 0;
+#X connect 12 0 13 0;
+#X connect 13 0 14 0;
+#X restore 556 234 pd Sequencing;
+#X msg 184 323 info;
+#X text 555 256 missing:;
+#X text 569 273 pd advanced;
+#N canvas 924 101 188 152 dispatch 0;
+#X obj 15 15 inlet;
+#X obj 15 42 route calibration;
+#X obj 14 75 s antescofo_calib;
+#X obj 113 101 outlet;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X restore 9 405 pd dispatch;
+#X text 84 156 ...Open [pd sound] for the Reich and Action demos...
+;
+#X connect 0 0 52 0;
+#X connect 1 0 52 0;
+#X connect 2 0 52 0;
+#X connect 3 0 52 0;
+#X connect 4 0 52 0;
+#X connect 17 0 52 0;
+#X connect 18 0 52 0;
+#X connect 24 0 52 0;
+#X connect 25 0 67 0;
+#X connect 26 0 27 0;
+#X connect 29 0 28 0;
+#X connect 30 0 24 0;
+#X connect 31 0 24 0;
+#X connect 32 0 9 0;
+#X connect 33 0 35 0;
+#X connect 34 0 33 0;
+#X connect 35 0 52 0;
+#X connect 36 0 4 0;
+#X connect 37 0 36 0;
+#X connect 38 0 36 0;
+#X connect 43 0 63 0;
+#X connect 52 0 81 0;
+#X connect 52 1 6 0;
+#X connect 52 2 32 0;
+#X connect 52 3 11 0;
+#X connect 52 4 12 0;
+#X connect 52 5 13 0;
+#X connect 62 0 64 0;
+#X connect 67 0 52 0;
+#X connect 78 0 52 0;
+#X connect 81 0 5 0;

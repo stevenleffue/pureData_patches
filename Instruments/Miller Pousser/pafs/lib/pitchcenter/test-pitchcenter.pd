@@ -1,0 +1,15 @@
+#N canvas 301 94 621 553 12;
+#X obj 248 175 pitchcenter;
+#X floatatom 247 204 4 0 0 0 - - -;
+#X floatatom 245 122 5 0 128 0 - - -;
+#X msg 306 128 set 5 10 15 20;
+#X floatatom 434 103 5 0 128 0 - - -;
+#X msg 437 133 tolerance \$1;
+#X obj 247 97 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 0 0 1 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 0 0;
+#X connect 6 0 2 0;

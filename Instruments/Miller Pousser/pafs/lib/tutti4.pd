@@ -1,0 +1,16 @@
+#N canvas 77 430 411 249 10;
+#X obj 69 67 r \$1;
+#X obj 87 95 s \$2;
+#X obj 86 116 s \$3;
+#X obj 86 139 s \$4;
+#X obj 87 161 s \$5;
+#X obj 185 68 genctl \$2 \$6;
+#X text 13 21 args: tutti-name \, ctl-name1...ctl-name4 \, reset-value
+;
+#X obj 184 90 genctl \$3 \$6;
+#X obj 183 115 genctl \$4 \$6;
+#X obj 182 137 genctl \$5 \$6;
+#X connect 0 0 1 0;
+#X connect 0 0 2 0;
+#X connect 0 0 3 0;
+#X connect 0 0 4 0;

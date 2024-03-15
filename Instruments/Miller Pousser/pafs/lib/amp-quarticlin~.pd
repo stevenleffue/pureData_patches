@@ -1,0 +1,45 @@
+#N canvas 350 261 464 360 10;
+#X obj 46 291 line~;
+#X obj 39 189 unpack;
+#X obj 39 141 r \$1;
+#X obj 46 316 outlet~;
+#X text 21 36 \$1 is the name of the receive symbol.;
+#X text 21 58 outlet is the level as a signal.;
+#X obj 39 164 t l b;
+#X obj 177 165 f \$2;
+#X obj 177 189 sel 0;
+#X obj 87 189 f;
+#X obj 177 141 loadbang;
+#X obj 177 211 20;
+#X text 22 81 If no time value is given \, \$2 (default 20) is used.
+;
+#X text 21 11 control an amplitude in quartic units using linear segments.
+;
+#X text 22 103 \$3 (default 10) is the output corresponding to 100
+;
+#X obj 91 264 expr $f1*$f1*$f1*$f1*$f2;
+#X obj 91 243 max 0;
+#X obj 224 164 f \$3;
+#X obj 256 236 expr $f1*0.0001*0.0001;
+#X obj 224 190 sel 0;
+#X obj 224 212 10;
+#X connect 0 0 3 0;
+#X connect 1 0 16 0;
+#X connect 1 1 0 1;
+#X connect 2 0 6 0;
+#X connect 6 0 1 0;
+#X connect 6 1 9 0;
+#X connect 7 0 8 0;
+#X connect 8 0 11 0;
+#X connect 8 1 9 1;
+#X connect 9 0 0 1;
+#X connect 10 0 7 0;
+#X connect 10 0 17 0;
+#X connect 11 0 9 1;
+#X connect 15 0 0 0;
+#X connect 16 0 15 0;
+#X connect 17 0 19 0;
+#X connect 18 0 15 1;
+#X connect 19 0 20 0;
+#X connect 19 1 18 0;
+#X connect 20 0 18 0;

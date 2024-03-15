@@ -1,0 +1,87 @@
+# FIXME somehow plug the "save changes" dialog into close-by-wm
+# FIXME dirty condition 
+
+
+proc krzyszeditor_open {name geometry title} {
+ if {[winfo exists $name]} {
+  $name.text delete 1.0 end
+ } else {
+  toplevel $name
+  wm title $name $title
+  wm geometry $name $geometry
+  text $name.text -relief raised -bd 2 \
+   -font -*-courier-medium--normal--12-* \
+   -yscrollcommand "$name.scroll set" -background lightgrey
+  scrollbar $name.scroll -command "$name.text yview"
+  pack $name.scroll -side right -fill y
+  pack $name.text -side left -fill both -expand 1
+ }
+}
+
+proc krzyszeditor_doclose {name} {
+ destroy $name
+}
+
+proc krzyszeditor_append {name contents} {
+ if {[winfo exists $name]} {
+  $name.text insert end $contents
+ }
+}
+
+#    FIXME make it more reliable 
+proc krzyszeditor_send {name} {
+ if {[winfo exists $name]} {
+  set ii [$name.text index [concat end - 1 lines]]
+  pd [concat miXed$name clear \;]
+  for {set i 1} \
+   {[$name.text compare $i.end < $ii]} \
+   {incr i 1} {
+   set lin [$name.text get $i.0 $i.end]
+   if {$lin != ""} {
+#    LATER rethink semi/comma mapping */
+    regsub -all \; $lin "  _semi_ " tmplin
+    regsub -all \, $tmplin "  _comma_ " lin
+    pd [concat miXed$name addline $lin \;]
+   }
+  }
+  pd [concat miXed$name end \;]
+ }
+}
+
+proc krzyszeditor_close {name ask} {
+ if {[winfo exists $name]} {
+  set dirty $ask
+  if {$dirty == 0} {krzyszeditor_doclose $name} else {
+   set title [wm title $name]
+   set answer [tk_messageBox \-type yesnocancel \
+    \-icon question \
+    \-message [concat Save changes to $title?]]
+   if {$answer == "yes"} {krzyszeditor_send $name}
+   if {$answer != "cancel"} {krzyszeditor_doclose $name}
+  }
+ }
+}
+
+proc krzyszpanel_open {target inidir} {
+ global pd_opendir
+ if {$inidir == ""} {
+  set $inidir $pd_opendir
+ }
+ set filename [tk_getOpenFile \
+  -initialdir $inidir]
+ if {$filename != ""} {
+  pd [concat $target symbol [pdtk_enquote $filename] \;]
+ }
+}
+
+proc krzyszpanel_save {target inidir inifile} {
+ if {$inifile != ""} {
+  set filename [tk_getSaveFile \
+   -initialdir $inidir -initialfile $inifile]
+ } else {
+  set filename [tk_getSaveFile]
+ }
+ if {$filename != ""} {
+  pd [concat $target symbol [pdtk_enquote $filename] \;]
+ }
+}

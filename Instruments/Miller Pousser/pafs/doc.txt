@@ -1,0 +1,173 @@
+----------------- running the patch overall ------------- 
+inside the "sequencer" panel:
+"stop" resets the patch to initial conditions.
+"master in" and "master out" are in dB, 100 for "normal".
+"meters" turns on the VU meters on the front panel, and also prints out
+pitch tracker output.
+
+The patch outputs to 6 channels; the "stereo" toggle mixes them down to 2.
+"direct" sends the ADC to the output; this is spatialized in the "spat d"
+subpatch.
+
+The "readsf" subpatch has controls to loop a soundfile into the patch input.
+Select "balayage1.aiff" or your own file via "openpanel"; then turn on the
+loop as desired.  Note there's a separate monitor control in that patch you
+might want to turn down once things are working.
+
+Resetting the patch stops the soundfile playing; but the looper isn't smart
+enough to cancel on reset.
+
+See "pd examples" for message boxes to call up example settings.
+
+-------------------- units --------------
+
+Except for master in and out, gains are all 0-100, with gains in dB as
+follows:
+CONTROL   0   10  20  30  40  50  60  70  80  90  100
+GAIN      -  -30 -18 -11  -6  -2   1   4   6   8   10
+
+--------------------- spat subpatches -------------
+
+Five signal groups (direct out, effects, samplers, 'jack', and PAFs)
+are spatialized, each with the following controls:
+
+dry (0-100, gain units) - spatialize directly
+wet (") - effects send (note: normally, effects themselves go out "dry").
+dist (0-100) - distance (controls direct to reverb mix)
+angle (0-100 for full circle) - angular location of center of spread
+radius (0-100) - center to periphery
+spread (0-100) - for banks like samplers, left-to-right spread of indivuals
+
+"rounds" (-100-100 and beyond) - controls "angle" to send sounds in a circle
+
+-------------------- effects ----------------------------
+
+FREQUENCY SHIFTER:
+
+there are two separate ranges, shifted separately.  Overall controals are:
+
+f-mix (0-100, linear) - dry/wet mix
+f-hfmix (0-100, linear) - mix between bandpass band and hi-frequency band
+f-cutoff (-100-127, MIDI) - low frequency cutoff. -100 for DC.
+f-xover (-100-127, MIDI) - crossover between bandpass and hi-frequency
+
+So the bandpass is between 'f-cutoff' and 'f-xover' and is selected by setting
+'f-hfmix' to 0.
+
+For each frequency range, you get:
+
+f-pos (0-100, linear) - balance between negative and positive shift
+f-fre (-100-127, MIDI) - frequency shift; -100 for no shift
+f-f0 (0-100) percentage by which frequency shift reacts to pitch tracker.
+
+COMB FILTERS:
+
+comb-mix (0-100, linear) - dry/wet mix
+comb-input (0-100, gain units) - input gain
+comb-fback (0-100, linear) - feedback. 100 is infinite; 98 is highly tuned
+comb-lopass (0-100, linear) - low pass filter percentage inside loops
+comb-octave(0-100) - octave doubler (50->one octave; 100->two octaves)
+comb-invert (0/1) - invert the doubler for top octave (for odd harmonics)
+comb-a1 (0-100, gain units) - output gain of comb filter (also comb-a2, ...)
+comb-f1 (0-127, MIDI units) - comb fundamental frequency (also comb-f2, ...)
+
+PHASER and NOISE:
+ph-mix, n-mix (0-100, linear) - dry/wet mix
+ph-fre, n-fre (-100 - 127, MIDI) - modulation frequency
+
+PITCH SHIFTERS AKA HARMONIZERS:
+
+hamp1, etc (0-100, gain units) - gains of 4 pitch shifters
+hfre1, etc - transposition up or down in cents (e.g., 700 is +1 fifth)
+hdel1, etc (0-999, sec/100) - delay; not adjustible live (will click)
+hwind (0-100, msec) - window size
+
+---------------- jack (oscillator bank): -----------------
+
+jack-amp (0-100, gain units) - output level
+
+vocoder controls (most useful if you freeze an analysis by turning off
+"jack-osc):
+
+jack-depth (0-100, linear) - vocoder depth. 0 is off; 100 is full control
+jack-spect (0-100; MIDI) - transposition of spectrum; 60 is normal
+jack-thresh (0-100; dB) - input threshold below which oscs don't sound
+
+jack-gliss (0-inf; msec) - lowpass filter on osc frequencies
+jack-amptc (0-inf; msec) - lowpass filter on osc amplitudes
+
+jack-osc (0/1) - on/off for live input to control oscillators.
+jack-paf (0/1) - on/off for live input to control PAF frequencies.  The first
+three jack-amp-base controls are for the three formants.
+jack-formant (0/1) on/off for live input to control PAF formants.  The first
+jack-amp-base control gives overall amplitude.
+
+jack-snap-1 (etc) - take snapshot onto bank of 16 oscillators
+jack-snap-gliss1 (etc) - gliss to another snapshot; must set jack-gliss,
+jack-amptc, jack-slewhalftomes, and jack-stealdb appropriately.
+
+jack-arpeg (0-inf; msec) - arpeggiates snapshots
+
+osc/paf/formant/samp - controls what snapshots go to
+
+jack-amp1, etc (0-100, gain units) separate gains for 16-oscillator banks
+jack-mpy1, etc (0-inf; percentage) - transposition factor for four banks
+jack-shift1, etc (-inf - inf; HZ) - frequency shift in Hz for four banks
+
+jack-preferlo (0-140; MIDI) - preferred low frequency bound for jack analysis
+jack-lodbperoct (0-100; dB) - dB per octave rolloff below jack-preferlo
+jack-preferhi, jack-hidbperoct - same thing for upper frequency bound
+jack-slewhalftones (0-100; halftones) - interval jack can gliss frame to frame
+jack-stealdb (0-100, dB) - dB a partial must outshout a tracked one to steal it
+
+jack-inter1value - added db to award partials that are spaced a desired
+interval apart
+jack-interhalftones - the interval desired
+jack-inter1tolerance - thenumber of cents the interval can be mistuned and
+still pass
+
+jack-samp-transpo - transposition if jack drives sampler
+jack-samp-... - other sampler parameters for jack-driven sampler notes
+
+--------- Markov chains -----------------
+
+A new object, "smerdyakov", runs Markov chains learned from sequences
+(such as in the file, mark/lib/walk1.txt).  The states are numbered 0-99.
+
+A line in the text file gives:
+   state delay-since-previous-note duration relative-probability velocity
+
+Selecting chain 10 gets walk1.txt, chain 20 is walk2.txt and chain 15 is a
+50-50 mix of the two.  (0-100 is a series of increasing-step random walks;
+110-200 is the same with irregular rhythms.)
+
+An abstraction organizes the parameters for one markov chain that controls a
+single parameter (e.g. cf1) or event (e.g. "e" to throw a note at Synful).
+So, for instance, the "e-x" Markov chain has parameters:
+
+e-xmark -- on/off control
+e-xbase - pitch corresponding to state '0' (i.e.. lowest pitch output)
+e-xrange -- interval between lowest and highest pitch played, i.e., pitch range
+e-xquantize -- on/off to quantize the result to an integer
+e-xseq -- which chain (divide this by 10 to find which "walk#.txt" file; mod ten gives mix)
+e-xline -- for parameters, but not for Synful notes, ramp time for the parameter change
+e-xorder -- 100* the order of the chain; 100 gives first order; 50 gives 1/2; 150 gives 1.5.
+e-xost (0-100)  -- replaces inter-onset times with their average to uniformize rhythm
+e-xbias (0100) -- percent probability to jump to a "bias" note.
+
+The bias notes work as follows.  A list of the possible bias notes is set by sending the
+message, "e-xbiaslist # # #...", e.g., "e-xbiaslist 60 64 67" sets a C major chord.
+Then if e-xbias is 60, for example, then at each step of the Markov chanin,
+with probability 0.6 the state of the Markov chain is replaced with a state that would
+yield an output 60 64 or 67.  (The actual state depends on the "e-xbase" and "e-xrange"
+settings; if there is no such state you'll see a complaint on the Pd window.)
+
+This can be used with the "histodog" object, which keeps a buffer of recent pitches and
+amplitudes (MIDI and dB-from-0-to-100) and then, when you send a message 
+"wtf <nhist> <minimum-pitches> <maximum-pitches> <minimum-fraction-a-pitch-should-have>",
+it outputs a list of the most prominent pitches, between the minimum and maximum number
+of them, but all of which should have appeared at least the specified fraction of the
+time.  (the measurement of prominence is by an amplitude-weighted pitch histogram).
+
+
+

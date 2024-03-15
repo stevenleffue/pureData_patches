@@ -1,0 +1,59 @@
+#N canvas 195 38 516 441 10;
+#X msg 20 266 set \$1;
+#X obj 20 215 line 0 100;
+#X obj 20 191 r \$1;
+#X obj 20 289 s \$1-set;
+#X text 18 6 Control a number box (or other graphical control) by sending
+it "set" messages whenever the value changes. If the value change is
+ramped \, the control imitates the ramp but only updates 10 times a
+second.;
+#X text 17 70 Sending a symbol to "\$1-grab" causes the current value
+to be sent to that symbol.;
+#X obj 28 240 v \$0-last;
+#X obj 141 191 r \$1-grab;
+#X obj 141 261 pack s 0;
+#X msg 141 283 \; \$1 \$2;
+#X obj 141 213 t a b;
+#X obj 363 233 v \$0-last;
+#X msg 363 257 set \$1;
+#X obj 286 284 change;
+#X obj 173 235 v \$0-last;
+#X obj 286 255 v \$0-last;
+#X obj 286 356 pack 0 s s;
+#X obj 286 309 t f b b;
+#X obj 314 333 symbol \$1;
+#X msg 286 378 \; \$3 list \$2 \$1;
+#X obj 407 185 r grab-all-init;
+#X obj 286 185 r \$1-grab-next;
+#X obj 299 209 r grab-all-rest;
+#X obj 286 233 b;
+#X obj 407 209 t b s;
+#X obj 434 358 symbol;
+#X text 15 98 Sending a symbol to grab-all-init sets the destination
+for a selective grab. Only values that change since the "init" get
+reported. Banging \$1-grab-next reports any change in this particular
+parameter. Then bang grab-all-next to get any spillover.;
+#X connect 0 0 3 0;
+#X connect 1 0 0 0;
+#X connect 1 0 6 0;
+#X connect 2 0 1 0;
+#X connect 7 0 10 0;
+#X connect 8 0 9 0;
+#X connect 10 0 8 0;
+#X connect 10 1 14 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 17 0;
+#X connect 14 0 8 1;
+#X connect 15 0 13 0;
+#X connect 16 0 19 0;
+#X connect 17 0 16 0;
+#X connect 17 1 18 0;
+#X connect 18 0 16 1;
+#X connect 20 0 24 0;
+#X connect 21 0 23 0;
+#X connect 22 0 23 0;
+#X connect 23 0 15 0;
+#X connect 24 0 11 0;
+#X connect 24 1 25 0;
+#X connect 25 0 16 2;

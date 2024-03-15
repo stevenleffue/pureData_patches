@@ -1,0 +1,48 @@
+#N canvas 139 346 714 532 10;
+#X obj 63 51 inlet;
+#X floatatom 522 134 5 0 0 0 - - -;
+#X obj 101 153 t f f;
+#X msg 101 108 0.667;
+#X msg 82 283 0;
+#X obj 63 79 t b b b f;
+#X obj 163 228 t f f;
+#X text 59 30 characteristic frequency \, 0(DC) to 1(Nyquist);
+#X obj 82 413 outlet;
+#X obj 238 415 outlet;
+#X text 82 435 real1;
+#X text 173 437 real2;
+#X obj 172 413 outlet;
+#X obj 101 176 expr (1 - $f2*$f2) / (1 + $f2*$f2 + 2*$f2*cos($f1))
+;
+#X obj 163 205 expr 2*$f2*sin($f1) / (1 + $f2*$f2 + 2*$f2*cos($f1))
+;
+#X obj 82 307 expr (1 - $f2*$f2) / (1 + $f2*$f2 + 2*$f2*cos($f1));
+#X obj 522 89 clip 0 1;
+#X obj 522 111 expr tan($f1*1.57);
+#X obj 101 131 expr $f1*1.5708;
+#X text 119 4 3-pole (or zero) Butterworth filter coefficient calculator
+;
+#X text 145 109 "theta" in units of pi/2;
+#X text 211 138 conjugate pair of pole/zero locations:;
+#X text 197 155 real part: (1-r*r)/(1+r*r-2rcos(th));
+#X text 245 226 imaginary part: 2rsin(th)/(...);
+#X text 270 282 real-valued one \, theta=0;
+#X text 238 437 imag2;
+#X connect 0 0 5 0;
+#X connect 1 0 13 1;
+#X connect 1 0 14 1;
+#X connect 1 0 15 1;
+#X connect 2 0 13 0;
+#X connect 2 1 14 0;
+#X connect 3 0 18 0;
+#X connect 4 0 15 0;
+#X connect 5 1 4 0;
+#X connect 5 2 3 0;
+#X connect 5 3 16 0;
+#X connect 6 0 9 0;
+#X connect 13 0 12 0;
+#X connect 14 0 6 0;
+#X connect 15 0 8 0;
+#X connect 16 0 17 0;
+#X connect 17 0 1 0;
+#X connect 18 0 2 0;

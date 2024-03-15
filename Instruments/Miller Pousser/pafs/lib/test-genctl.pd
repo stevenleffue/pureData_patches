@@ -1,0 +1,8 @@
+#N canvas 2 3 450 300 10;
+#X msg 206 48 \; auto-register-foo 1 bar;
+#X msg 205 85 \; auto-register-foo 0;
+#X floatatom 74 179 5 0 0 0 foo foo-set foo;
+#X msg 54 29 \; foo 100;
+#X msg 52 65 \; foo 0;
+#X obj 76 107 genctl foo 20;
+#X msg 254 162 \; reset bang;

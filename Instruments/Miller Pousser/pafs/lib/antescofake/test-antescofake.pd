@@ -1,0 +1,10 @@
+#N canvas 309 83 450 300 10;
+#X msg 63 139 start;
+#X msg 84 168 next;
+#X obj 48 197 antescofake;
+#X obj 50 231 print outlet;
+#X msg 52 107 read ../../antescore1-nocomments.txt;
+#X connect 0 0 2 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 4 0 2 0;

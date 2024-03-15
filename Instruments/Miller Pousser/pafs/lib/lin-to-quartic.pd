@@ -1,0 +1,22 @@
+#N canvas 379 387 527 392 10;
+#X obj 246 151 loadbang;
+#X obj 246 203 sel 0;
+#X obj 246 177 f \$1;
+#X obj 185 328 outlet;
+#X obj 185 210 inlet;
+#X text 50 34 \$1 (default 10) is the input corresponding to output
+of 100;
+#X obj 185 237 t f b;
+#X obj 185 294 expr 100*exp(0.25*log($f1/$f2));
+#X obj 231 238 f 10;
+#X text 94 4 linear to amp-quartic~ input units.;
+#X obj 184 265 max 0;
+#X connect 0 0 2 0;
+#X connect 1 1 8 1;
+#X connect 2 0 1 0;
+#X connect 4 0 6 0;
+#X connect 6 0 10 0;
+#X connect 6 1 8 0;
+#X connect 7 0 3 0;
+#X connect 8 0 7 1;
+#X connect 10 0 7 0;

@@ -1,0 +1,26 @@
+#N canvas 511 279 476 325 10;
+#X obj 25 175 r \$1;
+#X obj 25 248 s \$1-set;
+#X msg 25 225 set \$1;
+#X obj 161 170 r \$1-grab;
+#X obj 161 240 pack s 0;
+#X msg 161 262 \; \$1 \$2;
+#X obj 161 192 t a b;
+#X text 37 43 Sending a symbol to "\$1-grab" causes the current value
+to be sent to that symbol.;
+#X obj 193 214 v \$0-last;
+#X text 38 5 Control a number box (or other graphical control) by sending
+it "set" messages whenever the value changes.;
+#X obj 40 199 v \$0-last;
+#X text 35 77 Sending a symbol to grab-all-init sets the destination
+for a selective grab. Only values that change since the "init" get
+reported. Banging \$1-grab-next reports any change in this particular
+parameter. Then bang grab-all-next to get any spillover.;
+#X connect 0 0 2 0;
+#X connect 0 0 10 0;
+#X connect 2 0 1 0;
+#X connect 3 0 6 0;
+#X connect 4 0 5 0;
+#X connect 6 0 4 0;
+#X connect 6 1 8 0;
+#X connect 8 0 4 1;

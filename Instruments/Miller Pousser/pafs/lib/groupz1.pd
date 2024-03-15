@@ -1,0 +1,17 @@
+#N canvas 118 416 515 144 10;
+#X obj 84 101 s \$4-\$8;
+#X obj 141 101 s \$5-\$8;
+#X obj 196 101 s \$6-\$8;
+#X obj 253 101 s \$7-\$8;
+#X obj 196 26 r \$3-\$8;
+#X obj 84 26 r \$1-\$8;
+#X obj 140 26 r \$2-\$8;
+#X connect 4 0 0 0;
+#X connect 4 0 1 0;
+#X connect 4 0 2 0;
+#X connect 4 0 3 0;
+#X connect 5 0 0 0;
+#X connect 5 0 1 0;
+#X connect 6 0 0 0;
+#X connect 6 0 1 0;
+#X connect 6 0 2 0;

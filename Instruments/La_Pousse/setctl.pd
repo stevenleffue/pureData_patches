@@ -1,0 +1,6 @@
+#N canvas 0 0 321 230 10;
+#X obj 133 82 r \$1;
+#X msg 133 106 set \$1;
+#X obj 133 130 s \$1-set;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;

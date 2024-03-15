@@ -1,0 +1,14 @@
+#N canvas 597 321 632 482 10;
+#X obj 106 31 forward-param pitch\$1 paf-pd~;
+#X obj 112 54 forward-param vamp\$1 paf-pd~;
+#X obj 105 75 forward-param vfreq\$1 paf-pd~;
+#X obj 105 94 forward-param noise\$1 paf-pd~;
+#X obj 105 131 forward-param amp\$1 paf-pd~;
+#X obj 103 154 forward-param cf\$1 paf-pd~;
+#X obj 103 177 forward-param bw\$1 paf-pd~;
+#X obj 102 205 forward-param amp\$1b paf-pd~;
+#X obj 102 227 forward-param cf\$1b paf-pd~;
+#X obj 102 250 forward-param bw\$1b paf-pd~;
+#X obj 103 276 forward-param amp\$1c paf-pd~;
+#X obj 101 299 forward-param cf\$1c paf-pd~;
+#X obj 101 322 forward-param bw\$1c paf-pd~;

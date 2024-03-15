@@ -1,0 +1,31 @@
+#N canvas 403 167 461 318 10;
+#X obj 145 221 line~;
+#X obj 138 168 unpack;
+#X obj 138 120 r \$1;
+#X obj 145 246 outlet~;
+#X text 22 31 \$1 is the name of the receive symbol.;
+#X text 22 53 outlet is the level as a signal.;
+#X obj 138 143 t l b;
+#X obj 114 194 * 0.01;
+#X text 21 11 control an amplitude in hundredths using linear segments.
+;
+#X obj 264 153 f \$2;
+#X obj 264 177 sel 0;
+#X obj 186 168 f;
+#X obj 264 129 loadbang;
+#X obj 264 199 20;
+#X text 22 77 If no time value is given \, \$2 (default 20) is used.
+;
+#X connect 0 0 3 0;
+#X connect 1 0 7 0;
+#X connect 1 1 0 1;
+#X connect 2 0 6 0;
+#X connect 6 0 1 0;
+#X connect 6 1 11 0;
+#X connect 7 0 0 0;
+#X connect 9 0 10 0;
+#X connect 10 0 13 0;
+#X connect 10 1 11 1;
+#X connect 11 0 0 1;
+#X connect 12 0 9 0;
+#X connect 13 0 11 1;

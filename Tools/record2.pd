@@ -1,0 +1,63 @@
+#N canvas 75 36 1197 704 10;
+#X msg 241 398 start;
+#X msg 297 398 stop;
+#X obj 102 119 bng 25 250 50 0 empty empty Save_as 29 12 0 10 -262130
+-1 -1;
+#X obj 153 398 savepanel;
+#X msg 153 426 open \$1;
+#X obj 405 448 timer;
+#X obj 404 418 metro 1;
+#X obj 396 389 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X floatatom 213 181 4 0 0 0 Time - -, f 4;
+#X obj 410 505 / 1000;
+#X obj 467 420 metro 500;
+#X obj 214 153 bng 25 250 50 0 empty empty Recording -28 -7 0 10 -203904
+-1 -1;
+#X obj 102 146 bng 25 250 50 0 empty empty Record 29 12 0 10 -204786
+-1 -1;
+#X obj 102 173 bng 25 250 50 0 empty empty Stop 29 12 0 10 -261234
+-1 -1;
+#X obj 241 463 writesf~ 2;
+#X obj 241 439 inlet~;
+#X obj 298 438 inlet~;
+#X obj 245 115 vu 8 80 rec_left empty -1 -8 0 10 -66577 -1 0 0;
+#X obj 261 115 vu 8 80 rec_right empty -1 -8 0 10 -66577 -1 0 0;
+#X obj 240 497 env~;
+#X obj 240 526 - 96;
+#X obj 289 500 env~;
+#X obj 289 529 - 96;
+#X obj 238 554 s rec_left;
+#X obj 312 556 s rec_right;
+#X obj 374 443 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 167 510 dac~ 1 2;
+#X connect 0 0 14 0;
+#X connect 1 0 14 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 14 0;
+#X connect 5 0 9 0;
+#X connect 6 0 5 1;
+#X connect 7 0 6 0;
+#X connect 7 0 10 0;
+#X connect 7 0 5 0;
+#X connect 7 0 25 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 12 0 0 0;
+#X connect 12 0 7 0;
+#X connect 13 0 1 0;
+#X connect 13 0 7 0;
+#X connect 15 0 14 0;
+#X connect 15 0 19 0;
+#X connect 15 0 26 0;
+#X connect 16 0 14 1;
+#X connect 16 0 21 0;
+#X connect 16 0 26 1;
+#X connect 19 0 20 0;
+#X connect 20 0 23 0;
+#X connect 21 0 22 0;
+#X connect 22 0 24 0;
+#X connect 25 0 5 0;
+#X coords 0 -1 1 1 175 100 1 100 100;
