@@ -1,0 +1,6 @@
+repoPushcommands
+---------
+git checkout <your_branch>
+git fetch origin
+git merge origin/main
+Git push origin develop:main
